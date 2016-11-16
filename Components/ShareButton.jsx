@@ -2,9 +2,16 @@
  * Created by ophelie on 07/11/2016.
  */
 
-import React from 'react';
-import { Button, Modal, Row, Tooltip, Overlay, FormControl, Image } from 'react-bootstrap';
-import $ from 'jquery';
+
+
+var Button = ReactBootstrap.Button;
+var Modal = ReactBootstrap.Modal;
+var Row = ReactBootstrap.Row;
+var Tooltip = ReactBootstrap.Tooltip;
+var Overlay = ReactBootstrap.Overlay;
+var FormControl = ReactBootstrap.FormControl;
+var Image = ReactBootstrap.Image;
+
 
 
 class ShareButton extends React.Component {
@@ -23,43 +30,47 @@ class ShareButton extends React.Component {
         };
 
         return (
-                <div>
-                    <a onClick={this._toggle.bind(this)}>
-                        <i className="fa fa-share-alt"/>
-                    </a>
-                    <Overlay {...sharedProps} placement="bottom">
-                        <Tooltip id="overload-bottom">
+            <div>
 
-                            <a id="fbtooltip" className="fa fa-facebook fa-lg" onClick={this._open.bind(this)}/>
-                            <a className="fa fa-twitter fa-lg" onClick={this._open.bind(this)}/>
-                        </Tooltip>
-                    </Overlay>
+                <Button id="button_share" ref="target" onClick={this._toggle.bind(this)}>
+                    <i className="fa fa-share-alt"/>
+                </Button>
+                <Overlay {...sharedProps} placement="bottom">
+                    <Tooltip id="overload-bottom">
 
-                    <Modal show={this.state.showModal} onHide={this._close.bind(this)}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Share your content</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Row>
-                                <Image id="sharedImgModal" src="https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data?width=800" rounded />
-                            </Row>
+                        <a id="fbtooltip" className="fa fa-facebook fa-lg" onClick={this._open.bind(this)}/>
+                        <a className="fa fa-twitter fa-lg" onClick={this._open.bind(this)}/>
+                    </Tooltip>
+                </Overlay>
 
-                            <div id="modalQuestion">Add your comment:</div>
-                            <Row bsClass="text-center">
-                                <form>
-                                    <textarea className="form-control" rows="3" value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
-                                </form>
-                            </Row>
 
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button onClick={this._close.bind(this)}>Cancel</Button>
-                            <Button onClick={this._uploadFacebook.bind(this)}>Publish</Button>
-                        </Modal.Footer>
-                    </Modal>
 
-                </div>
-                );
+
+                <Modal show={this.state.showModal} onHide={this._close.bind(this)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Share your content</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Row>
+                            <Image id="sharedImgModal" src={"https://play.dhis2.org/demo/api/" + this.props.type + "/" + this.props.id +"/data?width=500 "} rounded  />
+                        </Row>
+
+                        <div id="modalQuestion">Add your comment:</div>
+                        <Row bsClass="text-center">
+                            <form>
+                                <textarea className="form-control" rows="3" value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
+                            </form>
+                        </Row>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this._close.bind(this)}>Cancel</Button>
+                        <Button onClick={this._uploadFacebook.bind(this)}>Publish</Button>
+                    </Modal.Footer>
+                </Modal>
+
+            </div>
+        );
     }
     _close(){
         this.setState({ showModal: false});
@@ -78,14 +89,16 @@ class ShareButton extends React.Component {
 
         var comment = this.state.comment;
         var close = this._close();
+        var link = "https://play.dhis2.org/demo/api/"+ this.props.type +"/" + this.props.id +" /data?width=800";
 
+        console.log("coucou");
         FB.login(function () {
             FB.api(
                 '/me/feed',
                 'post',
                 {
                     message: comment,
-                    link: "https://play.dhis2.org/demo/api/maps/ZBjCfSaLSqD/data?width=800"
+                    link:link
                 },
                 function (response) {
                     if (!response) {
@@ -93,8 +106,8 @@ class ShareButton extends React.Component {
                         alert('Error occurred.');
                     } else if (response.error) {
                         //TODO NOT SUCESS
-                        document.getElementById('result').innerHTML =
-                            'Error: ' + response.error.message;
+                        console.log(response.error.message)
+
                     } else {
                         //TODO Success
                         close
@@ -113,7 +126,7 @@ ShareButton.propTypes = {
     comment: React.PropTypes.string
 };
 
-module.exports = ShareButton;
+//module.exports = ShareButton;
 
 /*
  _uploadTwitter(){

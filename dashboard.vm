@@ -7,11 +7,11 @@
 <script type="text/javascript" src="plugin/eventreport.js"></script>
 <script type="text/javascript" src="plugin/eventchart.js"></script>
 <script type="text/javascript" src="../dhis-web-commons/oust/oust.js"></script>
-<script type="text/javascript" src="javascript/dashboard.js"></script>
+
 
 <script type="text/javascript" src="../dhis-web-commons/javascripts/date.js"></script>
 
-<script type="text/javascript" src="javascript/dashboard.js"></script>
+
 
 ## Script and CSS added by us ##CSS Bootstrap
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
@@ -32,10 +32,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.30.6/react-bootstrap.js"></script>
 
 ## Add our js file to load our react component and initilize facebook app
-<script type="text/babel" src="javascript/ShareButton.jsx"></script>
+<script type="text/babel" src="Components/ShareButton.jsx"></script>
 <script type="text/javascript" src="javascript/facebook.js"></script>
+<script type="text/javascript" src="javascript/dashboard.js"></script>
 
-
+<script type="text/javascript">
 var i18n_share_your_interpretation_of = '$encoder.jsEscape( $i18n.getString( "share_your_interpretation_of" ), "'")'; var i18n_interpretation_was_shared = '$encoder.jsEscape( $i18n.getString( "interpretation_was_shared" ), "'")'; var i18n_viewing = '$encoder.jsEscape( $i18n.getString( "viewing" ), "'")'; var i18n_click_add_new_to_get_started = '$encoder.jsEscape( $i18n.getString( "click_add_new_to_get_started" ), "'")'; var i18n_add_stuff_by_searching = '$encoder.jsEscape( $i18n.getString( "add_stuff_by_searching" ), "'")'; var i18n_arrange_dashboard_by_dragging_and_dropping = '$encoder.jsEscape( $i18n.getString( "arrange_dashboard_by_dragging_and_dropping" ), "'")'; var i18n_remove = '$encoder.jsEscape( $i18n.getString( "remove" ), "'")'; var i18n_view_full_size = '$encoder.jsEscape( $i18n.getString( "view_full_size" ), "'")'; var i18n_click_to_explore_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "click_to_explore_drag_to_new_position" ), "'")'; var i18n_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "drag_to_new_position" ), "'")'; var i18n_manage = '$encoder.jsEscape( $i18n.getString( "manage" ), "'")'; var i18n_share = '$encoder.jsEscape( $i18n.getString( "share" ), "'")'; var i18n_explore = '$encoder.jsEscape( $i18n.getString( "explore" ), "'")'; var i18n_resize = '$encoder.jsEscape( $i18n.getString( "resize" ), "'")'; var i18n_share_interpretation = '$encoder.jsEscape( $i18n.getString( "share_interpretation" ), "'")'; var i18n_see_more_hits = '$encoder.jsEscape( $i18n.getString( "see_more_hits" ), "'")'; var i18n_see_fewer_hits = '$encoder.jsEscape( $i18n.getString( "see_fewer_hits" ), "'")'; var i18n_add = '$encoder.jsEscape( $i18n.getString( "add" ), "'")'; var i18n_click_and_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "click_and_drag_to_new_position" ), "'")'; var i18n_get_as_image = '$encoder.jsEscape( $i18n.getString( "get_as_image" ), "'")'; var i18n_user_org_unit_filter = '$encoder.jsEscape( $i18n.getString( "user_org_unit_filter" ), "'")'; var i18n_applies_to_favorites_with_user_org_units_only = '$encoder.jsEscape( $i18n.getString( "applies_to_favorites_with_user_org_units_only" ), "'")'; var i18n_missing_dashboard_app = '$encoder.jsEscape( $i18n.getString( "missing_dashboard_app" ), "'")'; jQuery( document ).ready( function() { dhis2.leftBar.resetPosition(); });
 
 </script>
