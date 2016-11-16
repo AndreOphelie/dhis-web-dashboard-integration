@@ -1,4 +1,6 @@
-#sharingDialog()
+#sharingDialog() 
+
+## Script include by DHIS app
 <script type="text/javascript" src="../dhis-web-pivot/reporttable.js"></script>
 <script type="text/javascript" src="../dhis-web-visualizer/chart.js"></script>
 <script type="text/javascript" src="../dhis-web-mapping/map.js"></script>
@@ -9,41 +11,39 @@
 
 <script type="text/javascript" src="../dhis-web-commons/javascripts/date.js"></script>
 
-<script type="text/javascript">
+<script type="text/javascript" src="javascript/dashboard.js"></script>
 
-var i18n_share_your_interpretation_of = '$encoder.jsEscape( $i18n.getString( "share_your_interpretation_of" ), "'")';
-var i18n_interpretation_was_shared = '$encoder.jsEscape( $i18n.getString( "interpretation_was_shared" ), "'")';
-var i18n_viewing = '$encoder.jsEscape( $i18n.getString( "viewing" ), "'")';
-var i18n_click_add_new_to_get_started = '$encoder.jsEscape( $i18n.getString( "click_add_new_to_get_started" ), "'")';
-var i18n_add_stuff_by_searching = '$encoder.jsEscape( $i18n.getString( "add_stuff_by_searching" ), "'")';
-var i18n_arrange_dashboard_by_dragging_and_dropping = '$encoder.jsEscape( $i18n.getString( "arrange_dashboard_by_dragging_and_dropping" ), "'")';
-var i18n_remove = '$encoder.jsEscape( $i18n.getString( "remove" ), "'")';
-var i18n_view_full_size = '$encoder.jsEscape( $i18n.getString( "view_full_size" ), "'")';
-var i18n_click_to_explore_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "click_to_explore_drag_to_new_position" ), "'")';
-var i18n_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "drag_to_new_position" ), "'")';
-var i18n_manage = '$encoder.jsEscape( $i18n.getString( "manage" ), "'")';
-var i18n_share = '$encoder.jsEscape( $i18n.getString( "share" ), "'")';
-var i18n_explore = '$encoder.jsEscape( $i18n.getString( "explore" ), "'")';
-var i18n_resize = '$encoder.jsEscape( $i18n.getString( "resize" ), "'")';
-var i18n_share_interpretation = '$encoder.jsEscape( $i18n.getString( "share_interpretation" ), "'")';
-var i18n_see_more_hits = '$encoder.jsEscape( $i18n.getString( "see_more_hits" ), "'")';
-var i18n_see_fewer_hits = '$encoder.jsEscape( $i18n.getString( "see_fewer_hits" ), "'")';
-var i18n_add = '$encoder.jsEscape( $i18n.getString( "add" ), "'")';
-var i18n_click_and_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "click_and_drag_to_new_position" ), "'")';
-var i18n_get_as_image = '$encoder.jsEscape( $i18n.getString( "get_as_image" ), "'")';
-var i18n_user_org_unit_filter = '$encoder.jsEscape( $i18n.getString( "user_org_unit_filter" ), "'")';
-var i18n_applies_to_favorites_with_user_org_units_only = '$encoder.jsEscape( $i18n.getString( "applies_to_favorites_with_user_org_units_only" ), "'")';
-var i18n_missing_dashboard_app = '$encoder.jsEscape( $i18n.getString( "missing_dashboard_app" ), "'")';
+## Script and CSS added by us ##CSS Bootstrap
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
 
-jQuery( document ).ready( function() {
-  dhis2.leftBar.resetPosition();
-});
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+## Our modal CSS
+<link rel="stylesheet" href="style/modal.css"> 
+## Add react JS
+<script src="modules/react/dist/react.js"></script>
+<script src="modules/react/dist/react-dom.js"></script>
+
+## Add Babel
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+
+## React boostrap
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.30.6/react-bootstrap.js"></script>
+
+## Add our js file to load our react component and initilize facebook app
+<script type="text/babel" src="javascript/ShareButton.jsx"></script>
+<script type="text/javascript" src="javascript/facebook.js"></script>
+
+
+var i18n_share_your_interpretation_of = '$encoder.jsEscape( $i18n.getString( "share_your_interpretation_of" ), "'")'; var i18n_interpretation_was_shared = '$encoder.jsEscape( $i18n.getString( "interpretation_was_shared" ), "'")'; var i18n_viewing = '$encoder.jsEscape( $i18n.getString( "viewing" ), "'")'; var i18n_click_add_new_to_get_started = '$encoder.jsEscape( $i18n.getString( "click_add_new_to_get_started" ), "'")'; var i18n_add_stuff_by_searching = '$encoder.jsEscape( $i18n.getString( "add_stuff_by_searching" ), "'")'; var i18n_arrange_dashboard_by_dragging_and_dropping = '$encoder.jsEscape( $i18n.getString( "arrange_dashboard_by_dragging_and_dropping" ), "'")'; var i18n_remove = '$encoder.jsEscape( $i18n.getString( "remove" ), "'")'; var i18n_view_full_size = '$encoder.jsEscape( $i18n.getString( "view_full_size" ), "'")'; var i18n_click_to_explore_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "click_to_explore_drag_to_new_position" ), "'")'; var i18n_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "drag_to_new_position" ), "'")'; var i18n_manage = '$encoder.jsEscape( $i18n.getString( "manage" ), "'")'; var i18n_share = '$encoder.jsEscape( $i18n.getString( "share" ), "'")'; var i18n_explore = '$encoder.jsEscape( $i18n.getString( "explore" ), "'")'; var i18n_resize = '$encoder.jsEscape( $i18n.getString( "resize" ), "'")'; var i18n_share_interpretation = '$encoder.jsEscape( $i18n.getString( "share_interpretation" ), "'")'; var i18n_see_more_hits = '$encoder.jsEscape( $i18n.getString( "see_more_hits" ), "'")'; var i18n_see_fewer_hits = '$encoder.jsEscape( $i18n.getString( "see_fewer_hits" ), "'")'; var i18n_add = '$encoder.jsEscape( $i18n.getString( "add" ), "'")'; var i18n_click_and_drag_to_new_position = '$encoder.jsEscape( $i18n.getString( "click_and_drag_to_new_position" ), "'")'; var i18n_get_as_image = '$encoder.jsEscape( $i18n.getString( "get_as_image" ), "'")'; var i18n_user_org_unit_filter = '$encoder.jsEscape( $i18n.getString( "user_org_unit_filter" ), "'")'; var i18n_applies_to_favorites_with_user_org_units_only = '$encoder.jsEscape( $i18n.getString( "applies_to_favorites_with_user_org_units_only" ), "'")'; var i18n_missing_dashboard_app = '$encoder.jsEscape( $i18n.getString( "missing_dashboard_app" ), "'")'; jQuery( document ).ready( function() { dhis2.leftBar.resetPosition(); });
 
 </script>
 <div id="interpretationPopup">
 </div>
 
-<div id="dashboardHeader"><h3>
+<div id="dashboardHeader">
+    <h3>
 #if( !$currentUser.profileFilled )<a class="alert" href="../dhis-web-user-profile/#/profile">$i18n.getString( "update_profile" )</a> &nbsp;&#8226;&nbsp;#end
 <a href="showSendFeedback.action">$i18n.getString( "write_feedback" )</a>
 #if( $messageCount > 0 )&nbsp;&#8226;&nbsp; <a class="alert" href="message.action">$messageCount #if( $messageCount > 1 )$i18n.getString( "unread_messages" )#else$i18n.getString( "unread_message" )#end</a> #end
@@ -60,7 +60,9 @@ jQuery( document ).ready( function() {
     </ul>
 </div>
 
-<div id="searchDiv"><input type="text" id="searchField" autocomplete="off" placeholder="$i18n.getString( 'search_for_users_charts_maps_reports' )"></div>
+<div id="searchDiv">
+    <input type="text" id="searchField" autocomplete="off" placeholder="$i18n.getString( 'search_for_users_charts_maps_reports' )">
+</div>
 <div id="hitDiv"></div>
 
 <div id="searchButton"><a class="blueButtonLink" href="javascript:dhis2.db.search()">$i18n.getString( "search" )</a></div>
@@ -112,14 +114,17 @@ jQuery( document ).ready( function() {
 </div>
 
 <div id="addDashboardForm">
-    <label style="margin-right: 10px">$i18n.getString( "name" )</label><input type="text" id="dashboardName" style="width: 240px; padding: 5px; margin-right: 10px;">
+    <label style="margin-right: 10px">$i18n.getString( "name" )</label>
+    <input type="text" id="dashboardName" style="width: 240px; padding: 5px; margin-right: 10px;">
     <a class="greyButtonLink" href="javascript:dhis2.db.addDashboard()" style="margin-top: 1px">$i18n.getString( "create" )</a>
 </div>
 
 <div id="manageDashboardForm" class="page">
     <h4>$i18n.getString( "rename_current_dashboard" )</h4>
-    <div><label style="margin-right: 10px">$i18n.getString( "name" )</label><input type="text" id="dashboardRename" style="width: 230px; padding: 5px; margin-right: 10px;">
-    <a class="greyButtonLink" href="javascript:dhis2.db.renameDashboard()" style="margin-top: 1px">$i18n.getString( "rename" )</a></div>
+    <div>
+        <label style="margin-right: 10px">$i18n.getString( "name" )</label>
+        <input type="text" id="dashboardRename" style="width: 230px; padding: 5px; margin-right: 10px;">
+        <a class="greyButtonLink" href="javascript:dhis2.db.renameDashboard()" style="margin-top: 1px">$i18n.getString( "rename" )</a></div>
     <h4>$i18n.getString( "add_items_to_current_dashboard" )</h4>
     <div><a class="greyButtonLink" href="javascript:dhis2.db.addMessagesContent()">$i18n.getString( "messages" )</a></div>
     <h4>$i18n.getString( "delete_current_dashboard" )</h4>
