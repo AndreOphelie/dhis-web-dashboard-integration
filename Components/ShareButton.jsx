@@ -17,7 +17,7 @@ var Image = ReactBootstrap.Image;
 class ShareButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { showModal: false, show: false, comment: 'Your comment'};
+        this.state = { showModal: false, show: false, comment: 'Your comment', social:'fb'};
     }
 
 
@@ -38,8 +38,8 @@ class ShareButton extends React.Component {
                 <Overlay {...sharedProps} placement="bottom">
                     <Tooltip id="overload-bottom">
 
-                        <a id="fbtooltip" className="fa fa-facebook fa-lg" onClick={this._open.bind(this)}/>
-                        <a className="fa fa-twitter fa-lg" onClick={this._open.bind(this)}/>
+                        <a id="fbtooltip" className="fa fa-facebook fa-lg" onClick={this._open.bind(this, 'fb')}/>
+                        <a className="fa fa-twitter fa-lg" onClick={this._open.bind(this, 'tw')}/>
                     </Tooltip>
                 </Overlay>
 
@@ -65,7 +65,7 @@ class ShareButton extends React.Component {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this._close.bind(this)}>Cancel</Button>
-                        <Button onClick={this._uploadFacebook.bind(this)}>Publish</Button>
+                        <Button onClick={this._confirm_publish.bind(this)}>Publish</Button>
                     </Modal.Footer>
                 </Modal>
 
@@ -75,15 +75,23 @@ class ShareButton extends React.Component {
     _close(){
         this.setState({ showModal: false});
     }
-    _open(){
+    _open(social){
         console.log("hi");
-        this.setState({ showModal: true });
+        console.log(social);
+        this.setState({ showModal: true, social:social });
     }
     _toggle() {
         this.setState({ show: !this.state.show });
     }
     _handle_comment_change(event){
         this.setState({comment: event.target.value});
+    }
+    _confirm_publish(){
+        console.log('STATE'+this.state.social);
+        if(this.state.social == 'fb'){
+            console.log('FBBB');
+            this._uploadFacebook();
+        }
     }
     _uploadFacebook(){
 
