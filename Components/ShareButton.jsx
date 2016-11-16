@@ -89,16 +89,24 @@ class ShareButton extends React.Component {
 
         var comment = this.state.comment;
         var close = this._close();
-        var link = "https://play.dhis2.org/demo/api/"+ this.props.type +"/" + this.props.id +" /data?width=800";
+        var url = "https://play.dhis2.org/demo/api/"+ this.props.type +"/" + this.props.id +"/data?width=800";
 
-        console.log("coucou");
+
+
         FB.login(function () {
+
+            var access_token =   FB.getAuthResponse()['accessToken'];
+            console.log('Access Token = '+ access_token);
+            console.log(tocard);
             FB.api(
-                '/me/feed',
+                '/me/photos',
                 'post',
                 {
                     message: comment,
-                    link:link
+
+            status: 'success',
+                access_token: access_token,
+                    url:url
                 },
                 function (response) {
                     if (!response) {
@@ -114,7 +122,7 @@ class ShareButton extends React.Component {
                     }
                 }
             );
-        }, {scope: 'publish_actions'});
+        }, {scope: 'publish_actions,user_photos'});
 
         //Call function to close the modal
 
