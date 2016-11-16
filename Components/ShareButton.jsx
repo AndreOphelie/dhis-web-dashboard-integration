@@ -10,8 +10,50 @@ var Row = ReactBootstrap.Row;
 var Tooltip = ReactBootstrap.Tooltip;
 var Overlay = ReactBootstrap.Overlay;
 var FormControl = ReactBootstrap.FormControl;
-var Image = ReactBootstrap.Image;
+//var Image = ReactBootstrap.Image;
 
+function getBase64Image(img) {
+    // Create an empty canvas element
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Copy the image contents to the canvas
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    // Get the data-URL formatted image
+    // Firefox supports PNG and JPEG. You could check img.src to
+    // guess the original format, but be aware the using "image/jpg"
+    // will re-encode the image.
+    var dataURL = canvas.toDataURL("image/png");
+
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+}
 
 
 class ShareButton extends React.Component {
@@ -52,7 +94,6 @@ class ShareButton extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Row>
-                            <Image id="sharedImgModal" src={"https://play.dhis2.org/demo/api/" + this.props.type + "/" + this.props.id +"/data?width=500 "} rounded  />
                         </Row>
 
                         <div id="modalQuestion">Add your comment:</div>
@@ -76,6 +117,7 @@ class ShareButton extends React.Component {
         this.setState({ showModal: false});
     }
     _open(){
+
         console.log("hi");
         this.setState({ showModal: true });
     }
@@ -92,37 +134,93 @@ class ShareButton extends React.Component {
         var url = "https://play.dhis2.org/demo/api/"+ this.props.type +"/" + this.props.id +"/data?width=800";
 
 
+        const contentType = 'image/png';
+
+        var img = new Image();
+        img.src = "http://192.168.247.1:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+
+        console.log(img);
+
+        img.addEventListener('load', function () {
+            var image = getBase64Image(img);
+            console.log("couocuocuocuc");
+            console.log(image);
+            var blob = b64toBlob(image, contentType);
+            //var blobUrl = URL.createObjectURL(blob);
+
+
+       /* var fd = new FormData();
+
+        fd.append("source", blob);
+        fd.append("message",comment);*/
+
+
+
 
         FB.login(function () {
+           // FB.getLoginStatus(function(response) {
+                //if (response.status === 'connected') {
+                   // var access_token = response.authResponse.accessToken;
 
             var access_token =   FB.getAuthResponse()['accessToken'];
-            console.log('Access Token = '+ access_token);
-            console.log(tocard);
-            FB.api(
-                '/me/photos',
-                'post',
-                {
-                    message: comment,
+            console.log('Access Token = ' + access_token);
 
-            status: 'success',
-                access_token: access_token,
-                    url:url
-                },
-                function (response) {
-                    if (!response) {
-                        //TODO NOT SUCESS
-                        alert('Error occurred.');
-                    } else if (response.error) {
-                        //TODO NOT SUCESS
-                        console.log(response.error.message)
 
-                    } else {
-                        //TODO Success
-                        close
+            //fd.append("access_token",access_token);
+
+            var fd = new FormData();
+            fd.append("access_token", access_token);
+            fd.append("source", blob);
+            fd.append("message", comment);
+            try {
+                $.ajax({
+                    url: "https://graph.facebook.com/me/photos?access_token=" + access_token,
+                    type: "POST",
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (data) {
+                        console.log("success " + data);
+                    },
+                    error: function (shr, status, data) {
+                        console.log("error " + data + " Status " + shr.status);
+                    },
+                    complete: function () {
+                        console.log("Posted to facebook");
                     }
-                }
-            );
-        }, {scope: 'publish_actions,user_photos'});
+                });
+            }
+            catch (e) {
+                console.log(e);
+            }
+
+            /*
+             FB.api(
+             '/me/photos',
+             'post',
+             {
+             data:fd,
+             processData:false,
+             contentType:false
+             },
+             function (response) {
+             if (!response) {
+             //TODO NOT SUCESS
+             alert('Error occurred.');
+             } else if (response.error) {
+             //TODO NOT SUCESS
+             console.log(response.error.message)
+
+             } else {
+             //TODO Success
+             close
+             }
+             }
+             );
+             }, {scope: 'publish_actions,user_photos'});*/
+                } ,  {scope: 'publish_actions,user_photos'});
+            } );
 
         //Call function to close the modal
 

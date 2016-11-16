@@ -11,7 +11,10 @@
 
 <script type="text/javascript" src="../dhis-web-commons/javascripts/date.js"></script>
 
+<script>
 
+
+</script>
 
 ## Script and CSS added by us ##CSS Bootstrap
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
@@ -32,8 +35,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.30.6/react-bootstrap.js"></script>
 
 ## Add our js file to load our react component and initilize facebook app
-<script type="text/babel" src="Components/ShareButton.jsx"></script>
 <script type="text/javascript" src="javascript/facebook.js"></script>
+<script type="text/babel" src="Components/ShareButton.jsx"></script>
+
 <script type="text/javascript" src="javascript/dashboard.js"></script>
 
 <script type="text/javascript">
