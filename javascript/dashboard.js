@@ -230,7 +230,7 @@ dhis2.db.dashboardReady = function () {
 
         console.log(id[0]);
         console.log(id[1]);
-       ReactDOM.render(React.createElement(ShareButton, { id: id[0], type: id[1] }),  document.getElementById(id_element))
+        ReactDOM.render(React.createElement(ShareButton, { id: id[0], type: id[1] }),  document.getElementById(id_element))
     }
 }
 

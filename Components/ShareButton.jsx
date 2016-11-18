@@ -10,7 +10,7 @@ var Row = ReactBootstrap.Row;
 var Tooltip = ReactBootstrap.Tooltip;
 var Overlay = ReactBootstrap.Overlay;
 var FormControl = ReactBootstrap.FormControl;
-//var Image = ReactBootstrap.Image;
+var Images = ReactBootstrap.Image;
 
 function getBase64Image(img) {
     // Create an empty canvas element
@@ -86,14 +86,13 @@ class ShareButton extends React.Component {
                 </Overlay>
 
 
-
-
                 <Modal show={this.state.showModal} onHide={this._close.bind(this)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Share your content</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Row>
+                            <Images id="sharedImgModal" src={"http://192.168.247.1:8082/api/" + this.props.type + "/" + this.props.id + "/data"} rounded />
                         </Row>
 
                         <div id="modalQuestion">Add your comment:</div>
@@ -116,7 +115,7 @@ class ShareButton extends React.Component {
     _close(){
         this.setState({ showModal: false});
     }
-    _open(social){  
+    _open(social){
         console.log("hi");
         console.log(social);
         this.setState({ showModal: true, social:social });
