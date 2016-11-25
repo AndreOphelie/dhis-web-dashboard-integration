@@ -39,6 +39,30 @@ dhis2.db.chartItems = [];
 // TODO double horizontal size
 
 //------------------------------------------------------------------------------
+// My function to render share button
+//------------------------------------------------------------------------------
+function add_my__share_button(){
+
+    ///TODO other file
+    var timestampArray = document.getElementsByClassName("share_button");
+
+    for(var i = (timestampArray.length - 1); i >= 0; i--)
+    {
+        console.log(timestampArray[i]);
+        var id_element = (timestampArray[i]).id;
+        var id = (timestampArray[i]).id.split(" ");
+
+        console.log(id[0]);
+        console.log(id[1]);
+        ReactDOM.render(React.createElement(ShareButton, { id: id[0], type: id[1] }),  document.getElementById(id_element))
+    }
+
+
+}
+
+
+
+//------------------------------------------------------------------------------
 // Document ready
 //------------------------------------------------------------------------------
 
@@ -99,7 +123,7 @@ dhis2.db.tmpl = {
     "<li id='li-${itemId}' class='liItem'><div class='item' id='${itemId}' style='${style}'><div class='itemHeader'><a href='javascript:dhis2.db.removeItem( \"${itemId}\" )'>${i18n_remove}</a>|" +
     "<a href='javascript:dhis2.db.resizeItem( \"${itemId}\" )'>${i18n_resize}</a>|" +
     "<a href='javascript:dhis2.db.exploreChart( \"${id}\" )'>${i18n_explore}</a>|" +
-    "<a href='javascript:dhis2.db.viewShareForm( \"${id}\", \"chart\", \"${name}\" )'>${i18n_share}</a>" +
+    "<a href='javascript:dhis2.db.viewShareForm( \"${id}\", \"chart\", \"${name}\" )'>${i18n_share}</a>|" +
     "<div id='${id} charts' class='share_button'></div>" +
     "{{if interpretationCount > 0}}<a href='#' onclick='dhis2.db.showInterpretationPopup( event, \"${id}\", \"CHART\" );return false;' title=\"${interpretationCount} interpretations\"><i class=\"fa fa-comments-o\"></i>${interpretationCount}</a>{{/if}}" +
     "{{if interpretationLikeCount > 0}}<a href='#' onclick='dhis2.db.showInterpretationPopup( event, \"${id}\", \"CHART\" );return false;' title=\"${interpretationLikeCount} likes\"><i class=\"fa fa-thumbs-o-up\"></i>${interpretationLikeCount}</a>{{/if}}" +
@@ -123,7 +147,7 @@ dhis2.db.tmpl = {
     "<li id='li-${itemId}' class='liItem'><div class='item' id='${itemId}' style='${style}'><div class='itemHeader'><a href='javascript:dhis2.db.removeItem( \"${itemId}\" )'>${i18n_remove}</a>|" +
     "<a href='javascript:dhis2.db.resizeItem( \"${itemId}\" )'>${i18n_resize}</a>|" +
     "<a href='javascript:dhis2.db.exploreMap( \"${id}\" )'>${i18n_explore}</a>|" +
-    "<a href='javascript:dhis2.db.viewShareForm( \"${id}\", \"map\", \"${name}\" )'>${i18n_share}</a>" +
+    "<a href='javascript:dhis2.db.viewShareForm( \"${id}\", \"map\", \"${name}\" )'>${i18n_share}</a>|" +
     "<div id='${id} maps' class='share_button'></div>" +
     "{{if interpretationCount > 0}}<a href='#' onclick='dhis2.db.showInterpretationPopup( event, \"${id}\", \"MAP\" );return false;' title=\"${interpretationCount} interpretations\"><i class=\"fa fa-comments-o\"></i>${interpretationCount}</a>{{/if}}" +
     "{{if interpretationLikeCount > 0}}<a href='#' onclick='dhis2.db.showInterpretationPopup( event, \"${id}\", \"MAP\" );return false;' title=\"${interpretationLikeCount} likes\"><i class=\"fa fa-thumbs-o-up\"></i>${interpretationLikeCount}</a>{{/if}}" +
@@ -135,7 +159,8 @@ dhis2.db.tmpl = {
     "<li id='li-${itemId}' class='liItem'><div class='item' id='${itemId}' style='${style}'><div class='itemHeader'><a href='javascript:dhis2.db.removeItem( \"${itemId}\" )'>${i18n_remove}</a>|" +
     "<a href='javascript:dhis2.db.resizeItem( \"${itemId}\" )'>${i18n_resize}</a>|" +
     "<a href='javascript:dhis2.db.exploreReportTable( \"${id}\" )'>${i18n_explore}</a>|" +
-    "<a href='javascript:dhis2.db.viewShareForm( \"${id}\", \"reportTable\", \"${name}\" )'>${i18n_share}</a>" +
+    "<a href='javascript:dhis2.db.viewShareForm( \"${id}\", \"reportTable\", \"${name}\" )'>${i18n_share}</a>|" +
+    "<div id='${id} reportTables' class='share_button'></div>" +
     "{{if interpretationCount > 0}}<a href='#' onclick='dhis2.db.showInterpretationPopup( event, \"${id}\", \"REPORT_TABLE\" );return false;' title=\"${interpretationCount} interpretations\"><i class=\"fa fa-comments-o\"></i>${interpretationCount}</a>{{/if}}" +
     "{{if interpretationLikeCount > 0}}<a href='#' onclick='dhis2.db.showInterpretationPopup( event, \"${id}\", \"REPORT_TABLE\" );return false;' title=\"${interpretationLikeCount} likes\"><i class=\"fa fa-thumbs-o-up\"></i>${interpretationLikeCount}</a>{{/if}}" +
     "<i class=\"fa fa-arrows dragIcon\" title=\"${i18n_click_and_drag_to_new_position}\"></i></div>" +
@@ -218,20 +243,8 @@ dhis2.db.dashboardReady = function () {
         out: dhis2.db.lastDropOut
     });
 
+    add_my__share_button();
 
-    ///TODO other file
-    var timestampArray = document.getElementsByClassName("share_button");
-
-    for(var i = (timestampArray.length - 1); i >= 0; i--)
-    {
-        console.log(timestampArray[i]);
-        var id_element = (timestampArray[i]).id;
-        var id = (timestampArray[i]).id.split(" ");
-
-        console.log(id[0]);
-        console.log(id[1]);
-        ReactDOM.render(React.createElement(ShareButton, { id: id[0], type: id[1] }),  document.getElementById(id_element))
-    }
 }
 
 dhis2.db.addDragDrop = function (id) {
@@ -634,6 +647,7 @@ dhis2.db.renderDashboard = function (id) {
         }
 
         dhis2.db.dashboardReady();
+
     });
 }
 
@@ -1063,11 +1077,14 @@ dhis2.db.addItemContent = function (type, id) {
                             $d = $("#contentList");
                             dhis2.db.renderItem($d, item, undefined, true, true);
                             dhis2.db.addDragDrop(item.id);
+                            add_my__share_button();
                         }
                         else {
                             dhis2.db.renderDashboard(dhis2.db.current());
                         }
                     });
+
+
                 }
                 else {
                     dhis2.db.renderDashboard(dhis2.db.current());
@@ -1154,9 +1171,11 @@ dhis2.db.renderReportTable = function (tableId, itemId) {
 dhis2.db.preOrAppend = function ($el, content, prepend) {
     if (prepend && prepend == true) {
         $el.prepend(content);
+        console.log("hnfdsklfjsdkl" + $el +content + prepend )
     }
     else {
         $el.append(content);
+        console.log("hnfdsklfjsdkl" + $el +content + prepend )
     }
 }
 

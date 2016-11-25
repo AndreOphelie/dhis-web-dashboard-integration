@@ -101,9 +101,9 @@ class ShareButton extends React.Component {
         return (
             <div>
 
-                <Button id="button_share" ref="target" onClick={this._toggle.bind(this)}>
+                <a id="button_share" ref="target" onClick={this._toggle.bind(this)}>
                     <i className="fa fa-share-alt"/>
-                </Button>
+                </a>
                 <Overlay {...sharedProps} placement="bottom">
                     <Tooltip id="overload-bottom">
 
@@ -113,13 +113,17 @@ class ShareButton extends React.Component {
                 </Overlay>
 
 
-                <Modal show={this.state.showModal} onHide={this._close.bind(this)}>
+                <Modal id="modal" show={this.state.showModal} onHide={this._close.bind(this)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Share your content</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Row>
-                            <Images id="sharedImgModal" src={"http://192.168.247.1:8082/api/" + this.props.type + "/" + this.props.id + "/data"} rounded />
+
+                            <Images onLoad={this._hideLoading} src={"http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data"} rounded />
+                            <div id="loading">
+                                <img id="loader" src="images/loading1.gif" />
+                            </div>
                         </Row>
 
                         <div id="modalQuestion">Add your comment:</div>
@@ -153,6 +157,9 @@ class ShareButton extends React.Component {
     _handle_comment_change(event){
         this.setState({comment: event.target.value});
     }
+    _hideLoading(){
+        $("#loading").hide()
+    }
     _confirm_publish(){
         console.log('STATE'+this.state.social);
         if(this.state.social == 'fb'){
@@ -168,6 +175,7 @@ class ShareButton extends React.Component {
 
         var comment = this.state.comment;
         var type = this.props.type;
+        var close = this._close();
 
 
         const contentType = 'image/png';
@@ -208,6 +216,7 @@ class ShareButton extends React.Component {
                 var str = JSON.stringify(data, null, 2);
                 //$('#result').html("Success\n" + str).show()
                 console.log("Success\n" + str);
+                close;
             }).fail(function(e){
                 var errorTxt = JSON.stringify(e, null, 2)
                 //$('#result').html("Error\n" + errorTxt).show()
@@ -221,16 +230,17 @@ class ShareButton extends React.Component {
             _uploadFacebook(){
 
         var comment = this.state.comment;
-        var close = this._close();
-        var url = "https://play.dhis2.org/demo/api/"+ this.props.type +"/" + this.props.id +"/data?width=800";
-
+                var close = this._close();
 
         const contentType = 'image/png';
 
         var img = new Image();
-        img.src = "http://192.168.247.1:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+        img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
 
         console.log(img);
+
+                $("#modal1").show();
+                $("#fade").show();
 
         img.addEventListener('load', function () {
             var image = getBase64Image(img);
@@ -239,11 +249,6 @@ class ShareButton extends React.Component {
             var blob = b64toBlob(image, contentType);
             //var blobUrl = URL.createObjectURL(blob);
 
-
-       /* var fd = new FormData();
-
-        fd.append("source", blob);
-        fd.append("message",comment);*/
 
 
 
@@ -271,14 +276,22 @@ class ShareButton extends React.Component {
                     processData: false,
                     contentType: false,
                     cache: false,
+
                     success: function (data) {
-                        console.log("success " + data);
+                        console.log("success " + data.id);
+                        var url = "https://www.facebook.com/photo.php?fbid=" + data.id
+                        $(".fb-send").attr("data-href",url)
+
+
                     },
                     error: function (shr, status, data) {
                         console.log("error " + data + " Status " + shr.status);
                     },
                     complete: function () {
                         console.log("Posted to facebook");
+                        close;
+                        $("#modal1").hide();
+                        $("#fade").hide();
                     }
                 });
             }
