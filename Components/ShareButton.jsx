@@ -3,7 +3,6 @@
  */
 
 
-
 var Button = ReactBootstrap.Button;
 var Modal = ReactBootstrap.Modal;
 var Row = ReactBootstrap.Row;
@@ -15,8 +14,9 @@ var Images = ReactBootstrap.Image;
 function getBase64Image(img) {
     // Create an empty canvas element
     var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
 
     // Copy the image contents to the canvas
     var ctx = canvas.getContext("2d");
@@ -86,7 +86,7 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 class ShareButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { showModal: false, show: false, comment: 'Your comment', social:'fb'};
+        this.state = { source:"",showModal: false, show: false, comment:"",disabled:"disabled",nodisplay:"", social:'fb',maxlength:0,text:""};
     }
 
 
@@ -118,38 +118,68 @@ class ShareButton extends React.Component {
                         <Modal.Title>Share your content</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Row>
+                        <Row className="center">
 
-                            <Images onLoad={this._hideLoading} src={"http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data"} rounded />
+                            <Images onLoad={this._hideLoading.bind(this)} id="sharedImgModal" src={this.state.source} rounded />
                             <div id="loading">
-                                <img id="loader" src="images/loading1.gif" />
+                                <img id="loader" className={this.state.nodisplay} src="images/loading1.gif" />
                             </div>
                         </Row>
 
-                        <div id="modalQuestion">Add your comment:</div>
+                        <div id="modalQuestion">{this.state.text}</div>
                         <Row bsClass="text-center">
                             <form>
-                                <textarea className="form-control" rows="3" value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
+                                <textarea className="form-control" placeholder="Enter your comment here... " rows="3"  maxLength={this.state.maxlength} value={this.state.comment} onChange={this._handle_comment_change.bind(this)}/>
                             </form>
                         </Row>
 
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this._close.bind(this)}>Cancel</Button>
-                        <Button onClick={this._confirm_publish.bind(this)}>Publish</Button>
+                        <Button id="publish" onClick={this._confirm_publish.bind(this)} disabled={this.state.disabled}>Publish</Button>
                     </Modal.Footer>
                 </Modal>
 
             </div>
         );
     }
+
+
     _close(){
         this.setState({ showModal: false});
     }
     _open(social){
         console.log("hi");
         console.log(social);
-        this.setState({ showModal: true, social:social });
+        var self = this;
+        if(this.props.type==='reportTables'){
+
+    console.log("plugin-" + this.props.id);
+            var d  = document.getElementById("plugin-" + this.props.id);
+            console.log(d)
+
+
+            domtoimage.toPng(d)
+                .then(function (dataUrl) {
+
+                    self.setState({source:dataUrl});
+                })
+                .catch(function (error) {
+                    console.error('oops, something went wrong!', error);
+                });
+
+            this.setState({showModal: true, social:social,show:false });
+        }else{
+            if(social == 'fb'){
+                this.setState({ maxlength:1000 , text:"Enter Your comment" });
+            }
+            if(social == 'tw'){
+                this.setState({ maxlength:140 , text:"Enter Your comment (Max 140 caracters)" });
+            }
+            var source = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+            this.setState({source:source, showModal: true, social:social,show:false });
+        }
+
     }
     _toggle() {
         this.setState({ show: !this.state.show });
@@ -158,10 +188,12 @@ class ShareButton extends React.Component {
         this.setState({comment: event.target.value});
     }
     _hideLoading(){
-        $("#loading").hide()
+        this.setState({nodisplay:"nodisplay"});
+        this.setState({disabled:""});
     }
     _confirm_publish(){
         console.log('STATE'+this.state.social);
+
         if(this.state.social == 'fb'){
             console.log('Facebook Request');
             this._uploadFacebook();
@@ -178,20 +210,20 @@ class ShareButton extends React.Component {
         var close = this._close();
 
 
-        const contentType = 'image/png';
-
-        var img = new Image();
-        img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
-
-        console.log(img);
-        var logo = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAKfSURBVHjabJNNSFRRGIafc+6d8Y6OM42aTmpNauRgUVBRVEwZCC6kdtGqRRBtWkWLKGgXtghaRIsK3ES0L4pKCPpZREX2oxnVlOn4V4026Tjj3HvPPS2asRp64OODw8v3cXjfTxinrlOGBHSxzgPjxW4Cqvj+j7icy8AVIAIcK5YPuAMc/9+2fxEioWz3sFoozCrloVzVrLKLtud6XQiRKKlKcrPYo8AbhEiq+Xxba2MN7dEwtqsQCExT8moszfRMNmFUWwN4uhKI/z1gHikCai6/fefaRlqiYW6+HGEunQU00cYaejbGeJacjgym0hEjGBhC66UvhIEWlbPHN6yqo7UhzLUbz9mxup65C4dInTtIxPLRd/sFW1vqaaoNoRw1DawAQhI4Awzi6fjahjD97ybAUfTuWc+Je6+5l5zmTOc6mMnydOQbm2N1sGh3AZNArwR6Pa0fRGqD5BYdvk7MEoo3sbG1npXVFsv8JtviTdAWZWjyB8pRUOkHuAqcNYEpDQOmFJ2O8iCbpyfegRSCk53rlszZFKtjYCiFqzyElAAPgQkTuGgIcfR7JkeouRYCfrw/Li1RcD38oQCW5UMvFKCqog/YYgJ9QAbHPTKbt5cnNrVy980op+uCzOVshBCYhmR4LM2+DTFG0vNgGu+BS8AjUYqyFiLp5QttBza38flnjudPPoDt/k5ulUX37g6k43JncAwjGOhH626A0oA1wEfl6UVs10q0NxK2fGQLLkJAqMLHeGaBF5++KllVYQjIF+13SkFKAi2GFN+wfMOP36ZiZqWfppogrqeZTM+jXYURtO4XN8cAp/wWvgA5YMoIWiOelPtHZ7JMZBYywm/uNSorQOvRona0/Bb+ZhcgBRQMQ14CUsAtoAoolIt/DQBMqAUSa5wR2gAAAABJRU5ErkJggg==";
 
 
+        if (this.props.type == "reportTables")
+        {
+
+            var image= this.state.source;
+            image = image.replace(/^data:image\/(png|jpg);base64,/, "");
+
+        }else {
+
+            var image = getBase64Image(document.getElementById("sharedImgModal"));
+        }
 
 
-        img.addEventListener('load', function () {
-            var image = getBase64Image(img);
-            console.log("couocuocuocuc");
             console.log(image);
             //var blob = b64toBlob(image, contentType);
            // var name =  type + 'png';
@@ -224,9 +256,8 @@ class ShareButton extends React.Component {
             });
 
 
-            });
-    }
 
+    }
             _uploadFacebook(){
 
         var comment = this.state.comment;
@@ -234,18 +265,18 @@ class ShareButton extends React.Component {
 
         const contentType = 'image/png';
 
-        var img = new Image();
-        img.src = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+                if (this.props.type == "reportTables")
+                {
 
-        console.log(img);
+                    var image= this.state.source;
+                    image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
-                $("#modal1").show();
-                $("#fade").show();
+                }else {
 
-        img.addEventListener('load', function () {
-            var image = getBase64Image(img);
-            console.log("couocuocuocuc");
-            console.log(image);
+                    var image = getBase64Image(document.getElementById("sharedImgModal"));
+                }
+
+
             var blob = b64toBlob(image, contentType);
             //var blobUrl = URL.createObjectURL(blob);
 
@@ -324,7 +355,7 @@ class ShareButton extends React.Component {
              );
              }, {scope: 'publish_actions,user_photos'});*/
                 } ,  {scope: 'publish_actions,user_photos'});
-            } );
+
 
         //Call function to close the modal
 

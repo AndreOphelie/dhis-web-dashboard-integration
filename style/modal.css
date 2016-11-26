@@ -46,6 +46,17 @@ body {
 #modal{
     z-index: 1500;
 }
+.nodisplay{
+    display:none;
+}
+
+#publish.disabled {
+    cursor : not-allowed;
+}
+
+.center{
+    text-align:center;
+}
 
 #fade {
     display: none;
