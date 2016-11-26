@@ -11,77 +11,6 @@ var Overlay = ReactBootstrap.Overlay;
 var FormControl = ReactBootstrap.FormControl;
 var Images = ReactBootstrap.Image;
 
-function getBase64Image(img) {
-    // Create an empty canvas element
-    var canvas = document.createElement("canvas");
-
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-
-    // Copy the image contents to the canvas
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    // Get the data-URL formatted image
-    // Firefox supports PNG and JPEG. You could check img.src to
-    // guess the original format, but be aware the using "image/jpg"
-    // will re-encode the image.
-    var dataURL = canvas.toDataURL("image/png");
-
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-}
-
-/*function b64toBlob(b64Data, contentType, sliceSize) {
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
-
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
-    }
-
-    var blob = new Blob(byteArrays, {type: contentType});
-    return blob;
-}*/
-
-
-//Convert base64 into blob
-//cf http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
-function b64toBlob(b64Data, contentType, sliceSize) {
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
-
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
-    }
-
-    var blob = new Blob(byteArrays, {type: contentType});
-    return blob;
-}
-
 
 class ShareButton extends React.Component {
     constructor(props) {
@@ -208,6 +137,7 @@ class ShareButton extends React.Component {
         var comment = this.state.comment;
         var type = this.props.type;
         var close = this._close();
+        var self = this;
 
 
 
@@ -220,7 +150,7 @@ class ShareButton extends React.Component {
 
         }else {
 
-            var image = getBase64Image(document.getElementById("sharedImgModal"));
+            var image = self._getBase64Image(document.getElementById("sharedImgModal"));
         }
 
 
@@ -236,7 +166,7 @@ class ShareButton extends React.Component {
                 console.log(result);
                 var data = new FormData();
                 data.append('status', comment);
-                data.append('media[]', b64toBlob(image), 'logo.png');
+                data.append('media[]', self._b64toBlob(image), 'logo.png');
 
                 return result.post('/1.1/statuses/update_with_media.json', {
                     data: data,
@@ -259,6 +189,7 @@ class ShareButton extends React.Component {
 
     }
             _uploadFacebook(){
+                var self = this;
 
         var comment = this.state.comment;
                 var close = this._close();
@@ -273,11 +204,11 @@ class ShareButton extends React.Component {
 
                 }else {
 
-                    var image = getBase64Image(document.getElementById("sharedImgModal"));
+                    var image = self._getBase64Image(document.getElementById("sharedImgModal"));
                 }
 
 
-            var blob = b64toBlob(image, contentType);
+            var blob = self._b64toBlob(image, contentType);
             //var blobUrl = URL.createObjectURL(blob);
 
 
@@ -359,6 +290,49 @@ class ShareButton extends React.Component {
 
         //Call function to close the modal
 
+    }
+
+    _getBase64Image(img) {
+        // Create an empty canvas element
+        var canvas = document.createElement("canvas");
+
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+
+        // Copy the image contents to the canvas
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        // Get the data-URL formatted image
+        // Firefox supports PNG and JPEG. You could check img.src to
+        // guess the original format, but be aware the using "image/jpg"
+        // will re-encode the image.
+        var dataURL = canvas.toDataURL("image/png");
+
+        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    }
+    _b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, {type: contentType});
+        return blob;
     }
 
 }
