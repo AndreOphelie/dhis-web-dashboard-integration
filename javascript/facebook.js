@@ -1,5 +1,7 @@
 /**
  * Created by Julien on 11/11/2016.
+ * Facebook SDK initialization
+ * Create an app on facebook developper account and use the right app id
  */
 
 window.fbAsyncInit = function() {

@@ -2,7 +2,7 @@
  * Created by ophelie on 07/11/2016.
  */
 
-
+//import react boostrap components
 var Button = ReactBootstrap.Button;
 var Modal = ReactBootstrap.Modal;
 var Row = ReactBootstrap.Row;
@@ -11,7 +11,9 @@ var Overlay = ReactBootstrap.Overlay;
 var FormControl = ReactBootstrap.FormControl;
 var Images = ReactBootstrap.Image;
 
-
+/**
+ * Component React represent our Share Button with his modal
+ */
 class ShareButton extends React.Component {
     constructor(props) {
         super(props);
@@ -74,96 +76,132 @@ class ShareButton extends React.Component {
     }
 
 
+    /**
+     * Method call to close the modal
+     */
     _close(){
+        //Set the state of the show modal to false
         this.setState({ showModal: false});
     }
+
+
+    /**
+     *Method call to open the modal
+     * @param : social : reprensent the social media selected by the user ( twitter or facebook)
+     */
     _open(social){
-        console.log("hi");
-        console.log(social);
         var self = this;
+        //If it's a reportTables that the user want to share
         if(this.props.type==='reportTables'){
 
-    console.log("plugin-" + this.props.id);
+            //Get the HTML represent the pivot table
             var d  = document.getElementById("plugin-" + this.props.id);
-            console.log(d)
 
-
+            //Use the library dom to image to convert our HTML table to an image
             domtoimage.toPng(d)
                 .then(function (dataUrl) {
-
+                    //When the conversion is done set the source of the image modal to the image in Base64 returned by the function of the library
                     self.setState({source:dataUrl});
                 })
                 .catch(function (error) {
-                    console.error('oops, something went wrong!', error);
+                    //Error on the conversion of the HMML table
+                    console.error('HTML table was not converted , error :', error);
                 });
 
             this.setState({showModal: true, social:social,show:false });
+
+            //If the user wants to share a map or a chart
         }else{
-            if(social == 'fb'){
-                this.setState({ maxlength:1000 , text:"Enter Your comment" });
-            }
-            if(social == 'tw'){
-                this.setState({ maxlength:140 , text:"Enter Your comment (Max 140 caracters)" });
-            }
+
+            //Find the image by calling the API of DHIS with the id of the image where the user click.
             var source = "http://localhost:8082/api/" + this.props.type + "/" + this.props.id + "/data";
+            //Set this new source to the image and set the showmodal to true and close the tooltip
             this.setState({source:source, showModal: true, social:social,show:false });
+        }
+        //Set the preference for the textArea if the user choose facebook or twitter
+        if(social == 'fb'){
+            //For facebook comment's limitation to 1000 characters
+            this.setState({ maxlength:1000 , text:"Enter Your comment" });
+        }
+        if(social == 'tw'){
+            //For twitter comment's limitation to 140 characters
+            this.setState({ maxlength:140 , text:"Enter Your comment (Max 140 characters)" });
         }
 
     }
     _toggle() {
         this.setState({ show: !this.state.show });
     }
+    /**
+     *Method call when the comment is modified by the user
+     * @param : event : the component which declenched the event
+     */
     _handle_comment_change(event){
+        //Set the state comment of our comment with the current content of the text area
         this.setState({comment: event.target.value});
     }
+    /**
+     *Method call when the image is loading to hide the loading image and active the publish button
+     */
     _hideLoading(){
+        //Set the state of our loading animation
         this.setState({nodisplay:"nodisplay"});
+        //Enable the click on the publish button
         this.setState({disabled:""});
     }
+    /**
+     *Method call when the user click on the publish button
+     * Catch the right action between upload on twitter or on facebook
+     */
     _confirm_publish(){
-        console.log('STATE'+this.state.social);
 
+        //Choose the right method to call
         if(this.state.social == 'fb'){
             console.log('Facebook Request');
+            //Call upload facebook
             this._uploadFacebook();
         }
         if(this.state.social == 'tw'){
             console.log('Twitter Request');
+            //Call upload twitter
             this._uploadTwitter();
         }
     }
+    /**
+     *Method call when the user click on the publish button and had selected twitter
+     * Convert the image to base 64 and blob
+     * Oauth with twitter and post the image with his comment
+     */
     _uploadTwitter(){
 
+        //Store the value of our component
         var comment = this.state.comment;
         var type = this.props.type;
-        var close = this._close();
         var self = this;
 
 
-
-
+        //If the user want to share a report table the image is already a Base64
         if (this.props.type == "reportTables")
         {
 
             var image= this.state.source;
             image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
+            //Else we have to convert the image get by the API in base 64
         }else {
 
             var image = self._getBase64Image(document.getElementById("sharedImgModal"));
         }
 
 
-            console.log(image);
-            //var blob = b64toBlob(image, contentType);
-           // var name =  type + 'png';
 
-            // Initialize with your OAuth.io app public key
+            // Initialize with your OAuth and twitter
             OAuth.initialize('SB6S4-dwB3azNlMTtoqSvhvLNv8');
 
 
+            //Publish on twitter
             OAuth.popup("twitter").then(function(result) {
-                console.log(result);
+
                 var data = new FormData();
                 data.append('status', comment);
                 data.append('media[]', self._b64toBlob(image), 'logo.png');
@@ -175,10 +213,10 @@ class ShareButton extends React.Component {
                     contentType: false
                 });
             }).done(function(data){
-                var str = JSON.stringify(data, null, 2);
-                //$('#result').html("Success\n" + str).show()
-                console.log("Success\n" + str);
-                close;
+                //var str = JSON.stringify(data, null, 2);
+                //console.log("Success\n" + str);
+                //Close the modal
+                self._close;
             }).fail(function(e){
                 var errorTxt = JSON.stringify(e, null, 2)
                 //$('#result').html("Error\n" + errorTxt).show()
@@ -188,48 +226,46 @@ class ShareButton extends React.Component {
 
 
     }
+    /**
+     *Method call when the user click on the publish button and had selected facebook
+     * Convert the image to base 64 and blob
+     * Oauth with facebook and post the image with his comment
+     */
             _uploadFacebook(){
-                var self = this;
 
-        var comment = this.state.comment;
-                var close = this._close();
 
+        var self = this;
         const contentType = 'image/png';
 
-                if (this.props.type == "reportTables")
-                {
+        //If the user want to share a report table the image is already a Base64
+        if (this.props.type == "reportTables")
+        {
 
-                    var image= this.state.source;
-                    image = image.replace(/^data:image\/(png|jpg);base64,/, "");
+            var image= this.state.source;
+            image = image.replace(/^data:image\/(png|jpg);base64,/, "");
 
-                }else {
+            //Else we have to convert the image get by the API in base 64
+        }else {
 
-                    var image = self._getBase64Image(document.getElementById("sharedImgModal"));
-                }
+            var image = self._getBase64Image(document.getElementById("sharedImgModal"));
+        }
 
-
+            //convert the image to file
             var blob = self._b64toBlob(image, contentType);
-            //var blobUrl = URL.createObjectURL(blob);
 
 
-
-
-
+        //Launch the facebook sign in
         FB.login(function () {
-           // FB.getLoginStatus(function(response) {
-                //if (response.status === 'connected') {
-                   // var access_token = response.authResponse.accessToken;
 
+            //Get the access token of the actual connection, used for API call
             var access_token =   FB.getAuthResponse()['accessToken'];
-            console.log('Access Token = ' + access_token);
 
-
-            //fd.append("access_token",access_token);
-
+            //Create the data to send to facebook thanks to his API
             var fd = new FormData();
             fd.append("access_token", access_token);
             fd.append("source", blob);
-            fd.append("message", comment);
+            fd.append("message", this.state.comment);
+            //API call
             try {
                 $.ajax({
                     url: "https://graph.facebook.com/me/photos?access_token=" + access_token,
@@ -241,19 +277,15 @@ class ShareButton extends React.Component {
 
                     success: function (data) {
                         console.log("success " + data.id);
-                        var url = "https://www.facebook.com/photo.php?fbid=" + data.id
-                        $(".fb-send").attr("data-href",url)
-
-
                     },
                     error: function (shr, status, data) {
                         console.log("error " + data + " Status " + shr.status);
                     },
                     complete: function () {
                         console.log("Posted to facebook");
-                        close;
-                        $("#modal1").hide();
-                        $("#fade").hide();
+                        // Close the modal when the post is finished
+                        self._close;
+
                     }
                 });
             }
@@ -261,38 +293,17 @@ class ShareButton extends React.Component {
                 console.log(e);
             }
 
-            /*
-             FB.api(
-             '/me/photos',
-             'post',
-             {
-             data:fd,
-             processData:false,
-             contentType:false
-             },
-             function (response) {
-             if (!response) {
-             //TODO NOT SUCESS
-             alert('Error occurred.');
-             } else if (response.error) {
-             //TODO NOT SUCESS
-             console.log(response.error.message)
-
-             } else {
-             //TODO Success
-             close
-             }
-             }
-             );
-             }, {scope: 'publish_actions,user_photos'});*/
+          //Add scope corresponds to permission use by the facebook user that use the application
                 } ,  {scope: 'publish_actions,user_photos'});
 
 
-        //Call function to close the modal
-
     }
-
+    /**
+     *Method call to convert an image to base 64
+     *@ param : img : the image (HTML tag) we want to convert
+     */
     _getBase64Image(img) {
+
         // Create an empty canvas element
         var canvas = document.createElement("canvas");
 
@@ -304,13 +315,14 @@ class ShareButton extends React.Component {
         ctx.drawImage(img, 0, 0);
 
         // Get the data-URL formatted image
-        // Firefox supports PNG and JPEG. You could check img.src to
-        // guess the original format, but be aware the using "image/jpg"
         // will re-encode the image.
         var dataURL = canvas.toDataURL("image/png");
 
         return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     }
+    /**
+     *Method call to convert an image to a file
+     */
     _b64toBlob(b64Data, contentType, sliceSize) {
         contentType = contentType || '';
         sliceSize = sliceSize || 512;
@@ -340,51 +352,3 @@ class ShareButton extends React.Component {
 ShareButton.propTypes = {
     comment: React.PropTypes.string
 };
-
-//module.exports = ShareButton;
-
-/*
- _uploadTwitter(){
- $.ajax({
- type: "POST",
- url: "https://api.twitter.com/1.1/statuses/update.json",
- data: {
- status: "hello!!!!"
- },
- success: function () {
- console.log("SUCCESSSS");
- },
- error: function (e) {
- console.log(e);
- }
- })
- }
- */
-
-/*
- <div id="ZBjCfSaLSqD">
- <Button bsStyle="primary" onClick={this._open.bind(this)} ><i className="fa fa-share-alt fa-3x"/></Button>
-
- </div>
-
-
- <Modal show={this.state.showModal} onHide={this._close.bind(this)}>
- <Modal.Header closeButton>
- <Modal.Title>Share your content</Modal.Title>
- </Modal.Header>
- <Modal.Body>
- <div id="modalQuestion">On which social media would you like to share?</div>
- <Row bsClass="text-center">
- <Button className="btnSocialShare" id="btnFacebook" type="button"><img className="imgShareBtn" id="imgFacebook" src="/app/src/facebook.png"/></Button>
- </Row>
- <Row bsClass="text-center">
- <Button className="btnSocialShare" id="btnTwitter" type="button"><img className="imgShareBtn" id="imgTwitter" src="/app/src/twitter.png"/></Button>
- </Row>
-
-
- </Modal.Body>
- <Modal.Footer>
- <Button onClick={this._close.bind(this)}>Close</Button>
- </Modal.Footer>
- </Modal>
- */

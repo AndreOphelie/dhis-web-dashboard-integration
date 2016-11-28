@@ -88,15 +88,6 @@
 </script>
 
 
-<script>
-   //PostTwitter();
-</script>
-
-<div id="fade"></div>
-<div id="modal1">
-    <img id="loader" src="images/loading1.gif" />
-</div>
-
 <div id="interpretationPopup">
 </div>
 

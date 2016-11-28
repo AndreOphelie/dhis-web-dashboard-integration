@@ -43,24 +43,20 @@ dhis2.db.chartItems = [];
 //------------------------------------------------------------------------------
 function add_my__share_button(){
 
-    ///TODO other file
+    //Get all the button we are added
     var timestampArray = document.getElementsByClassName("share_button");
 
+    //For all the share button added on the dashboard
     for(var i = (timestampArray.length - 1); i >= 0; i--)
     {
-        console.log(timestampArray[i]);
+       //Get the current id of this element and this type (map , chart , pivot table)
         var id_element = (timestampArray[i]).id;
         var id = (timestampArray[i]).id.split(" ");
 
-        console.log(id[0]);
-        console.log(id[1]);
+        //Render our react element With the correct id and type
         ReactDOM.render(React.createElement(ShareButton, { id: id[0], type: id[1] }),  document.getElementById(id_element))
     }
-
-
 }
-
-
 
 //------------------------------------------------------------------------------
 // Document ready
@@ -242,6 +238,7 @@ dhis2.db.dashboardReady = function () {
         over: dhis2.db.lastDropOver,
         out: dhis2.db.lastDropOut
     });
+    //We add our share button when the dashboard is finished to load
 
     add_my__share_button();
 
@@ -1077,6 +1074,7 @@ dhis2.db.addItemContent = function (type, id) {
                             $d = $("#contentList");
                             dhis2.db.renderItem($d, item, undefined, true, true);
                             dhis2.db.addDragDrop(item.id);
+                            //We add our share button when a new widget is added to our dashboard.
                             add_my__share_button();
                         }
                         else {
