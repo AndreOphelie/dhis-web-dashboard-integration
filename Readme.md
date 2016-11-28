@@ -12,6 +12,7 @@ https://github.com/mariusmu/dhis2-message-app/tree/social
 
 ## How to make this work 
 First, go to https://www.dhis2.org/downloads and **dowload** the DHIS Live package.
+Rename it to "dhis-web-dashboard-integration"
 **Unzip**
 Then go to dhis-live/webapps/dhis/ folder.
 Replace the folder dhis-web-dashboard-integration by this one. 
