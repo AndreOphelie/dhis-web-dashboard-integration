@@ -216,7 +216,7 @@ class ShareButton extends React.Component {
                 //var str = JSON.stringify(data, null, 2);
                 //console.log("Success\n" + str);
                 //Close the modal
-                self._close;
+                self._close();
             }).fail(function(e){
                 var errorTxt = JSON.stringify(e, null, 2)
                 //$('#result').html("Error\n" + errorTxt).show()
@@ -235,6 +235,7 @@ class ShareButton extends React.Component {
 
 
         var self = this;
+        var comment =  this.state.comment;
         const contentType = 'image/png';
 
         //If the user want to share a report table the image is already a Base64
@@ -264,7 +265,7 @@ class ShareButton extends React.Component {
             var fd = new FormData();
             fd.append("access_token", access_token);
             fd.append("source", blob);
-            fd.append("message", this.state.comment);
+            fd.append("message",comment);
             //API call
             try {
                 $.ajax({
@@ -277,14 +278,15 @@ class ShareButton extends React.Component {
 
                     success: function (data) {
                         console.log("success " + data.id);
+                        // Close the modal when the post is finished
+                        self._close();
                     },
                     error: function (shr, status, data) {
                         console.log("error " + data + " Status " + shr.status);
                     },
                     complete: function () {
                         console.log("Posted to facebook");
-                        // Close the modal when the post is finished
-                        self._close;
+
 
                     }
                 });

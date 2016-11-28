@@ -5141,7 +5141,6 @@ jQuery.noConflict = function() {};
 
 
 return jQuery;
-return jQuery;
 }));
 
 },{}],12:[function(require,module,exports){

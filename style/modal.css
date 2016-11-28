@@ -2,8 +2,10 @@ html {
     position: relative;
     min-height: 100%;
 }
+
 body {
-    margin: 0 0 100px; /* bottom = footer height */
+    margin: 0 0 100px;
+    /* bottom = footer height */
 }
 
 #modalQuestion {
@@ -16,51 +18,59 @@ body {
     margin-bottom: 10px !important;
 }
 
-.imgShareBtn{
+.imgShareBtn {
     width: 100%;
 }
 
-#overload-bottom{
+#overload-bottom {
     margin-top: 32px;
 }
 
-#button_share:hover{
-
-    cursor : pointer ;
-
+#button_share:hover {
+    cursor: pointer;
 }
 
-.tooltip-inner{
+#overload-bottom {
+    left: 68% !important;
+    margin-top: 20px;
+}
+
+.tooltip-inner > a {
+    cursor: pointer;
+}
+
+.tooltip-inner {
     width: 80px;
     padding-top: 30px;
 }
 
-#fbtooltip{
+#fbtooltip {
     margin-right: 20px;
 }
 
-#sharedImgModal{
+#sharedImgModal {
     width: 550px;
 }
 
-#modal{
+#modal {
     z-index: 1500;
 }
-.nodisplay{
-    display:none;
+
+.nodisplay {
+    display: none;
 }
 
 #publish.disabled {
-    cursor : not-allowed;
+    cursor: not-allowed;
 }
 
-.center{
-    text-align:center;
+.center {
+    text-align: center;
 }
 
 #fade {
     display: none;
-    position:absolute;
+    position: absolute;
     top: 0%;
     left: 0%;
     width: 100%;
@@ -79,42 +89,42 @@ body {
     left: 45%;
     width: 100px;
     height: 100px;
-    padding:20px 15px 0px;
-    box-shadow:1px 1px 10px #ababab;
-    border-radius:20px;
+    padding: 20px 15px 0px;
+    box-shadow: 1px 1px 10px #ababab;
+    border-radius: 20px;
     background-color: white;
     z-index: 1002;
-    text-align:center;
+    text-align: center;
     overflow: auto;
 }
 
-#loader{
+#loader {
     width: 80%;
 }
 
-.share_button{
+.share_button {
     display: inline-block;
 }
-.img-rounded{
+
+.img-rounded {
     width: 100%;
 }
 
-#loading{
+#loading {
     width: 10%;
     margin: auto;
 }
 
-#image_share_modal{
+#image_share_modal {
     text-align: center;
 }
-.fb-messengermessageus{
-    margin-left: 20px;
 
+.fb-messengermessageus {
+    margin-left: 20px;
 }
 
-.fb-like{
+.fb-like {
     margin-left: 20px;
-
 }
 
 footer {

@@ -1169,11 +1169,9 @@ dhis2.db.renderReportTable = function (tableId, itemId) {
 dhis2.db.preOrAppend = function ($el, content, prepend) {
     if (prepend && prepend == true) {
         $el.prepend(content);
-        console.log("hnfdsklfjsdkl" + $el +content + prepend )
     }
     else {
         $el.append(content);
-        console.log("hnfdsklfjsdkl" + $el +content + prepend )
     }
 }
 
